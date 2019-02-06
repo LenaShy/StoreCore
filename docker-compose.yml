@@ -6,13 +6,18 @@ services:
             SA_PASSWORD: "P2ssw0rd@123"
             ACCEPT_EULA: "Y"
         ports:
-            - "1433:1433" 
+            - "1433:1433"
+        networks:
+            - back-tier 
     web:
         build: .
         ports:
-            - "8000:80"
+            - "5000"
         depends_on:
             - db
+        networks:
+            - front-tier
+            - back-tier
     web2:
         build:
             context: .
@@ -20,3 +25,19 @@ services:
         depends_on:
             - db
             - web
+        networks:
+            - front-tier
+            - back-tier
+    proxy:
+        build: ./haproxy
+        links:
+            - web
+        ports:
+            - 8080:80
+        networks:
+            - front-tier
+networks:
+    front-tier: 
+        driver: bridge
+    back-tier:
+        driver: bridge

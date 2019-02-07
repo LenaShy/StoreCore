@@ -10,7 +10,7 @@ services:
         networks:
             - back-tier 
     web:
-        build: .
+        image: "lshynk/storecore"
         ports:
             - "5000"
         depends_on:
@@ -19,9 +19,7 @@ services:
             - front-tier
             - back-tier
     web2:
-        build:
-            context: .
-            dockerfile: DockerfileUPDDB
+        image: "lshynk/updatedb"
         depends_on:
             - db
             - web
@@ -29,7 +27,7 @@ services:
             - front-tier
             - back-tier
     proxy:
-        build: ./haproxy
+        image: "lshynk/haproxy"
         links:
             - web
         ports:
@@ -41,3 +39,4 @@ networks:
         driver: bridge
     back-tier:
         driver: bridge
+        
